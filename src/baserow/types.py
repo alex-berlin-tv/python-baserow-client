@@ -57,6 +57,7 @@ class TableField:
   table_id: int
   name: str
   order: int
+  read_only: bool
   primary: bool
 
 
