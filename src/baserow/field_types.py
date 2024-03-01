@@ -20,6 +20,12 @@ class SelectOption:
   color: str
 
 
+@Union.register(TableField, 'email')
+@dataclasses.dataclass
+class EMailTableField(TableField):
+  pass
+
+
 @Union.register(TableField, 'text')
 @dataclasses.dataclass
 class TextTableField(TableField):
