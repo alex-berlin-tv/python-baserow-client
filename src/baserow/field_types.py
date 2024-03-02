@@ -86,13 +86,18 @@ class TextTableField(TableField):
 
 @Union.register(TableField, 'last_modified')
 @dataclasses.dataclass
-class DateTableField(TableField):
+class LastModifiedTableField(TableField):
   date_format: t.Optional[DateFormat]
   date_include_time: t.Optional[bool]
   date_time_format: t.Optional[str]
   date_show_tzinfo: t.Optional[bool]
   date_force_timezone: t.Optional[str]
 
+
+@Union.register(TableField, 'last_modified_by')
+@dataclasses.dataclass
+class LastModifiedByTableField(TableField):
+  pass
 
 @Union.register(TableField, 'long_text')
 @dataclasses.dataclass
