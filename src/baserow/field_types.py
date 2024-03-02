@@ -35,6 +35,14 @@ class DateFormat(enum.Enum):
   ISO = 'ISO'
 
 
+class RatingStyle(enum.Enum):
+  star = 'star'
+  heart = 'heart'
+  thumbs_up = 'thumps-up'
+  flag = 'flag'
+  smile = 'smile'
+
+
 @dataclasses.dataclass
 class SelectOption:
   id: int
@@ -73,7 +81,8 @@ class TextTableField(TableField):
 
 @Union.register(TableField, 'long_text')
 @dataclasses.dataclass
-class LongTextTableField(TableField): pass
+class LongTextTableField(TableField):
+  pass
 
 
 @Union.register(TableField, 'number')
@@ -87,6 +96,15 @@ class NumberTableField(TableField):
 @dataclasses.dataclass
 class PhoneTableField(TableField):
   pass
+
+
+@Union.register(TableField, 'rating')
+@dataclasses.dataclass
+class RatingTableField(TableField):
+  max_value: t.Optional[int]
+  color: t.Optional[str]
+  style: t.Optional[RatingStyle]
+
 
 @Union.register(TableField, 'single_select')
 @dataclasses.dataclass
@@ -115,9 +133,11 @@ class LinkRowTableField(TableField):
 
 @Union.register(TableField, 'boolean')
 @dataclasses.dataclass
-class BooleanTableField(TableField): pass
+class BooleanTableField(TableField):
+  pass
 
 
 @Union.register(TableField, 'file')
 @dataclasses.dataclass
-class FileTableField(TableField): pass
+class FileTableField(TableField):
+  pass
