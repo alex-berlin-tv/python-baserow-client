@@ -8,11 +8,6 @@ from databind.core.settings import Union
 from .types import TableField
 
 
-class NumberType(enum.Enum):
-  INTEGER = enum.auto()
-  DECIMAL = enum.auto()
-
-
 class TimeFormat(enum.Enum):
   HOUR_12 = 12
   HOUR_24 = 24
@@ -84,9 +79,8 @@ class LongTextTableField(TableField): pass
 @Union.register(TableField, 'number')
 @dataclasses.dataclass
 class NumberTableField(TableField):
-  number_decimal_places: int
-  number_negative: bool
-  number_type: NumberType
+  number_decimal_places: t.Optional[int]
+  number_negative: t.Optional[bool]
 
 
 @Union.register(TableField, 'phone_number')
