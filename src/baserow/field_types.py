@@ -85,6 +85,7 @@ class TextTableField(TableField):
 
 
 @Union.register(TableField, 'last_modified')
+@Union.register(TableField, 'created_on')
 @dataclasses.dataclass
 class LastModifiedTableField(TableField):
   date_format: t.Optional[DateFormat]
