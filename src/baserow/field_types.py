@@ -46,6 +46,8 @@ class SelectOption:
 
 
 @Union.register(TableField, 'date')
+@Union.register(TableField, 'last_modified')
+@Union.register(TableField, 'created_on')
 @dataclasses.dataclass
 class DateTableField(TableField):
   date_format: t.Optional[DateFormat]
@@ -84,20 +86,10 @@ class TextTableField(TableField):
   text_default: str
 
 
-@Union.register(TableField, 'last_modified')
-@Union.register(TableField, 'created_on')
-@dataclasses.dataclass
-class LastModifiedTableField(TableField):
-  date_format: t.Optional[DateFormat]
-  date_include_time: t.Optional[bool]
-  date_time_format: t.Optional[str]
-  date_show_tzinfo: t.Optional[bool]
-  date_force_timezone: t.Optional[str]
-
-
+@Union.register(TableField, 'created_by')
 @Union.register(TableField, 'last_modified_by')
 @dataclasses.dataclass
-class LastModifiedByTableField(TableField):
+class UserTableField(TableField):
   pass
 
 @Union.register(TableField, 'long_text')
