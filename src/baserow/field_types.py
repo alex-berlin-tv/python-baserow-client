@@ -8,11 +8,6 @@ from databind.core.settings import Union
 from .types import TableField
 
 
-class TimeFormat(enum.Enum):
-  HOUR_12 = 12
-  HOUR_24 = 24
-
-
 class FormulaType(enum.Enum):
   invalid = 'invalid'
   text = 'text'
@@ -48,6 +43,16 @@ class SelectOption:
   id: int
   value: str
   color: str
+
+
+@Union.register(TableField, 'date')
+@dataclasses.dataclass
+class DateTableField(TableField):
+  date_format: t.Optional[DateFormat]
+  date_include_time: t.Optional[bool]
+  date_time_format: t.Optional[str]
+  date_show_tzinfo: t.Optional[bool]
+  date_force_timezone: t.Optional[str]
 
 
 @Union.register(TableField, 'email')

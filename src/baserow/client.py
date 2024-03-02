@@ -145,6 +145,7 @@ class BaserowClient(BaseClient):
 
   def list_database_table_fields(self, table_id: int) -> t.List[TableField]:
     response = self._request('GET', f'/api/database/fields/table/{table_id}/').json()
+    print(response)
     return databind.json.load(response, t.List[TableField])
 
   def list_database_table_rows(
