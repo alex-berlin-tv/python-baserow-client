@@ -126,6 +126,7 @@ class RatingTableField(TableField):
 
 
 @Union.register(TableField, 'single_select')
+@Union.register(TableField, 'multiple_select')
 @dataclasses.dataclass
 class SingleSelectTableField(TableField):
   select_options: t.List[SelectOption]
