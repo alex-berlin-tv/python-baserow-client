@@ -69,6 +69,23 @@ class EMailTableField(TableField):
   pass
 
 
+@Union.register(TableField, 'count')
+@dataclasses.dataclass
+class CountTableField(TableField):
+  nullable: bool
+  number_decimal_places: t.Optional[int]
+  date_force_timezone: t.Optional[str]
+  date_time_format: t.Optional[str]
+  duration_format: t.Optional[str]
+  array_formula_type: t.Optional[str]
+  date_include_time: t.Optional[bool]
+  date_show_tzinfo: t.Optional[bool]
+  error: t.Optional[str]
+  date_format: t.Optional[str]
+  through_field_id: t.Optional[int]
+  formula_type: t.Optional[str]
+
+
 @Union.register(TableField, 'formula')
 @dataclasses.dataclass
 class FormulaTableField(TableField):
