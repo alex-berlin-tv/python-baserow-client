@@ -57,6 +57,12 @@ class DateTableField(TableField):
   date_force_timezone: t.Optional[str]
 
 
+@Union.register(TableField, 'duration')
+@dataclasses.dataclass
+class DurationTableField(TableField):
+  duration_format: t.Optional[str]
+
+
 @Union.register(TableField, 'email')
 @dataclasses.dataclass
 class EMailTableField(TableField):
