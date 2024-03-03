@@ -141,6 +141,23 @@ class RatingTableField(TableField):
   color: t.Optional[str]
   style: t.Optional[RatingStyle]
 
+@Union.register(TableField, 'rollup')
+@dataclasses.dataclass
+class RollupTableField(TableField):
+  nullable: bool
+  number_decimal_places: t.Optional[int]
+  date_force_timezone: t.Optional[str]
+  date_time_format: t.Optional[str]
+  duration_format: t.Optional[str]
+  array_formula_type: t.Optional[str]
+  date_include_time: t.Optional[bool]
+  date_show_tzinfo: t.Optional[bool]
+  error: t.Optional[str]
+  date_format: t.Optional[str]
+  through_field_id: t.Optional[int]
+  target_field_id: t.Optional[int]
+  rollup_function: t.Optional[str]
+  formula_type: t.Optional[str]
 
 @Union.register(TableField, 'single_select')
 @Union.register(TableField, 'multiple_select')
