@@ -142,6 +142,12 @@ class LongTextTableField(TableField):
   pass
 
 
+@Union.register(TableField, 'multiple_collaborators')
+@dataclasses.dataclass
+class MultipleCollaboratorsTableField(TableField):
+  notify_user_when_added: t.Optional[bool]
+
+
 @Union.register(TableField, 'number')
 @dataclasses.dataclass
 class NumberTableField(TableField):
