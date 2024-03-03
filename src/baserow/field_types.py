@@ -45,6 +45,12 @@ class SelectOption:
   color: str
 
 
+@Union.register(TableField, 'autonumber')
+@dataclasses.dataclass
+class AutonumberTableField(TableField):
+  pass
+
+
 @Union.register(TableField, 'date')
 @Union.register(TableField, 'last_modified')
 @Union.register(TableField, 'created_on')
