@@ -146,8 +146,12 @@ class UUIDTableField(TableField):
 @Union.register(TableField, 'link_row')
 @dataclasses.dataclass
 class LinkRowTableField(TableField):
-  link_row_table: int
-  link_row_related_field: int
+  link_row_table_id: t.Optional[int]
+  link_row_related_field_id: t.Optional[int]
+  # Deprecated
+  link_row_table: t.Optional[int]
+  # Deprecated
+  link_row_related_field: t.Optional[int]
 
 
 @Union.register(TableField, 'boolean')
