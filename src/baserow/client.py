@@ -10,7 +10,7 @@ import databind.json
 import requests
 
 from .filter import Filter, FilterType
-from .types import Application, Page, PermissionedOrderedGroup, Table, TableField, UploadResponse, User
+from .types import Application, Page, PermissionedOrderedGroup, Table, TableField, File, User
 
 log = logging.getLogger(__name__)
 DEFAULT_CREDENTIALS_FILE = '.baserow-creds.json'
@@ -298,13 +298,13 @@ class BaserowClient(BaseClient):
         break
       page_number = page.next
 
-  def upload_file(self, file: BufferedReader) -> UploadResponse:
+  def upload_file(self, file: BufferedReader) -> File:
     """Uploads a file to Baserow by uploading the file contents directly."""
     response = self._request('POST', '/api/user-files/upload-file/', files={'file': file}).json()
-    return databind.json.load(response, UploadResponse)
+    return databind.json.load(response, File)
 
-  def upload_via_url(self, url: str) -> UploadResponse:
+  def upload_via_url(self, url: str) -> File:
     """Uploads a file to Baserow by downloading it from the provided URL."""
     payload = {'url': url}
     response = self._request('POST', '/api/user-files/upload-via-url/', json=payload).json()
-    return databind.json.load(response, UploadResponse)
+    return databind.json.load(response, File)

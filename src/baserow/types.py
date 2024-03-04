@@ -1,5 +1,6 @@
 
 import dataclasses
+import datetime
 import enum
 import typing as t
 
@@ -88,13 +89,13 @@ class Thumbnail:
 
 
 @dataclasses.dataclass
-class UploadResponse:
+class File:
   size: int
   mime_type: t.Optional[str]
   is_image: t.Optional[bool]
   image_width: t.Optional[int]
   image_height: t.Optional[int]
-  uploaded_at: str
+  uploaded_at: datetime.datetime
   url: str
   thumbnails: t.Dict[str, Thumbnail]
   name: str
