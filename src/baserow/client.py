@@ -204,8 +204,11 @@ class BaserowClient(BaseClient):
       params['user_field_names'] = True
     return self._request('PATCH', f'/api/database/rows/table/{table_id}/{row_id}/', json=record, params=params).json()
 
-  def get_database_table_row(self, table_id: int, row_id: int) -> t.Dict[str, t.Any]:
-    return self._request('GET', f'/api/database/rows/table/{table_id}/{row_id}/').json()
+  def get_database_table_row(self, table_id: int, row_id: int, user_field_names: bool = False) -> t.Dict[str, t.Any]:
+    params = {}
+    if user_field_names:
+      params['user_field_names'] = True
+    return self._request('GET', f'/api/database/rows/table/{table_id}/{row_id}/', params=params).json()
 
   def upload_file(self, file: BufferedReader) -> File:
     """Uploads a file to Baserow by uploading the file contents directly."""
