@@ -193,11 +193,15 @@ class BaserowClient(BaseClient):
       response['results'])
 
   def create_database_table_row(self, table_id: int, record: t.Dict[str, t.Any], user_field_names: bool = False) -> t.Dict[str, t.Any]:
-    params = {'user_field_names': user_field_names}
+    params = {}
+    if user_field_names:
+      params['user_field_names'] = True
     return self._request('POST', f'/api/database/rows/table/{table_id}/', json=record, params=params).json()
 
   def update_database_table_row(self, table_id: int, row_id: int, record: t.Dict[str, t.Any], user_field_names: bool = False) -> t.Dict[str, t.Any]: 
-    params = {'user_field_names': user_field_names}
+    params = {}
+    if user_field_names:
+      params['user_field_names'] = True
     return self._request('PATCH', f'/api/database/rows/table/{table_id}/{row_id}/', json=record, params=params).json()
 
   def get_database_table_row(self, table_id: int, row_id: int) -> t.Dict[str, t.Any]:
