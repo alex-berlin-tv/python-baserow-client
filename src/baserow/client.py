@@ -100,16 +100,17 @@ class BaserowClient(BaseClient):
     return databind.json.load(response['user'], User), response['token']
 
   def create_user(
-    self,
-    name: str,
-    email: str,
-    password: str,
-    authenticate: bool = False,
-    group_invitation_token: t.Optional[str] = None,
-    template_id: t.Optional[int] = None
+      self,
+      name: str,
+      email: str,
+      password: str,
+      authenticate: bool = False,
+      group_invitation_token: t.Optional[str] = None,
+      template_id: t.Optional[int] = None
   ) -> t.Tuple[User, t.Optional[str]]:
 
-    payload: t.Dict[str, t.Union[str, bool, int]] = {'name': name, 'email': email, 'password': password}
+    payload: t.Dict[str, t.Union[str, bool, int]] = {
+        'name': name, 'email': email, 'password': password}
     if authenticate:
       payload['authenticate'] = authenticate
     if group_invitation_token:
@@ -137,7 +138,8 @@ class BaserowClient(BaseClient):
     return databind.json.load(response, Table)
 
   def update_database_table(self, table_id: int, name: str) -> Table:
-    response = self._request('PATCH', f'/api/database/tables/{table_id}/', json={'name': name}).json()
+    response = self._request(
+        'PATCH', f'/api/database/tables/{table_id}/', json={'name': name}).json()
     return databind.json.load(response, Table)
 
   def list_database_tables(self, database_id: int) -> t.List[Table]:
@@ -149,17 +151,17 @@ class BaserowClient(BaseClient):
     return databind.json.load(response, t.List[TableField])
 
   def list_database_table_rows(
-    self,
-    table_id: int,
-    exclude: t.Optional[t.List[str]] = None,
-    filter: t.Optional[t.List[Filter]] = None,
-    filter_type: t.Optional[FilterType] = None,
-    include: t.Optional[t.List[str]] = None,
-    order_by: t.Optional[t.List[str]] = None,
-    page: t.Optional[int] = None,
-    search: t.Optional[str] = None,
-    size: t.Optional[int] = None,
-    user_field_names: bool = False,
+      self,
+      table_id: int,
+      exclude: t.Optional[t.List[str]] = None,
+      filter: t.Optional[t.List[Filter]] = None,
+      filter_type: t.Optional[FilterType] = None,
+      include: t.Optional[t.List[str]] = None,
+      order_by: t.Optional[t.List[str]] = None,
+      page: t.Optional[int] = None,
+      search: t.Optional[str] = None,
+      size: t.Optional[int] = None,
+      user_field_names: bool = False,
   ) -> Page[t.Dict[str, t.Any]]:
 
     params: t.Dict[str, t.Optional[str]] = {}
@@ -187,10 +189,10 @@ class BaserowClient(BaseClient):
       page = 1
 
     return Page(
-      response['count'],
-      page - 1 if page > 1 else None,
-      page + 1 if response['next'] else None,
-      response['results'])
+        response['count'],
+        page - 1 if page > 1 else None,
+        page + 1 if response['next'] else None,
+        response['results'])
 
   def create_database_table_row(self, table_id: int, record: t.Dict[str, t.Any]) -> t.Dict[str, t.Any]:
     return self._request('POST', f'/api/database/rows/table/{table_id}/', json=record).json()
@@ -200,6 +202,17 @@ class BaserowClient(BaseClient):
 
   def get_database_table_row(self, table_id: int, row_id: int) -> t.Dict[str, t.Any]:
     return self._request('GET', f'/api/database/rows/table/{table_id}/{row_id}/').json()
+
+  def upload_file(self, file: BufferedReader) -> File:
+    """Uploads a file to Baserow by uploading the file contents directly."""
+    response = self._request('POST', '/api/user-files/upload-file/', files={'file': file}).json()
+    return databind.json.load(response, File)
+
+  def upload_via_url(self, url: str) -> File:
+    """Uploads a file to Baserow by downloading it from the provided URL."""
+    payload = {'url': url}
+    response = self._request('POST', '/api/user-files/upload-via-url/', json=payload).json()
+    return databind.json.load(response, File)
 
   # Extra
 
@@ -266,31 +279,31 @@ class BaserowClient(BaseClient):
     path.write_text(json.dumps(data, indent=2))
 
   def paginated_database_table_rows(
-    self,
-    table_id: int,
-    exclude: t.Optional[t.List[str]] = None,
-    filter: t.Optional[t.List[Filter]] = None,
-    filter_type: t.Optional[FilterType] = None,
-    include: t.Optional[t.List[str]] = None,
-    order_by: t.Optional[t.List[str]] = None,
-    search: t.Optional[str] = None,
-    size: t.Optional[int] = None,
-    user_field_names: bool = False,
+      self,
+      table_id: int,
+      exclude: t.Optional[t.List[str]] = None,
+      filter: t.Optional[t.List[Filter]] = None,
+      filter_type: t.Optional[FilterType] = None,
+      include: t.Optional[t.List[str]] = None,
+      order_by: t.Optional[t.List[str]] = None,
+      search: t.Optional[str] = None,
+      size: t.Optional[int] = None,
+      user_field_names: bool = False,
   ) -> t.Generator[Page[t.Dict[str, t.Any]], None, None]:
 
     page_number = None
     while True:
       page = self.list_database_table_rows(
-        table_id=table_id,
-        exclude=exclude,
-        filter=filter,
-        filter_type=filter_type,
-        include=include,
-        order_by=order_by,
-        page=page_number,
-        search=search,
-        size=size,
-        user_field_names=user_field_names,
+          table_id=table_id,
+          exclude=exclude,
+          filter=filter,
+          filter_type=filter_type,
+          include=include,
+          order_by=order_by,
+          page=page_number,
+          search=search,
+          size=size,
+          user_field_names=user_field_names,
       )
       if page.results:
         yield page
@@ -298,13 +311,25 @@ class BaserowClient(BaseClient):
         break
       page_number = page.next
 
-  def upload_file(self, file: BufferedReader) -> File:
-    """Uploads a file to Baserow by uploading the file contents directly."""
-    response = self._request('POST', '/api/user-files/upload-file/', files={'file': file}).json()
-    return databind.json.load(response, File)
-
-  def upload_via_url(self, url: str) -> File:
-    """Uploads a file to Baserow by downloading it from the provided URL."""
-    payload = {'url': url}
-    response = self._request('POST', '/api/user-files/upload-via-url/', json=payload).json()
-    return databind.json.load(response, File)
+  def update_file_field(
+      self,
+      table_id: int,
+      row_id: int,
+      field_id: int,
+      name: str,
+      visible_name: t.Optional[str] = None,
+  ) -> t.Dict[str, t.Any]:
+    """
+    Updates a file field with an already uploaded file, specified by it's internal name.
+    The name is contained within the upload file response.
+    """
+    record = {
+        f'field_{field_id}': [
+            {
+                'name': name,
+            }
+        ]
+    }
+    if visible_name is not None:
+      record[f'field_{field_id}'][0]['visible_name'] = visible_name
+    return self.update_database_table_row(table_id, row_id, record)
