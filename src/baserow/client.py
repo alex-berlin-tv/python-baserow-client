@@ -1,5 +1,6 @@
 
 import dataclasses
+from io import BufferedReader
 import json
 import logging
 import typing as t
@@ -9,7 +10,7 @@ import databind.json
 import requests
 
 from .filter import Filter, FilterType
-from .types import Application, Page, PermissionedOrderedGroup, Table, TableField, User
+from .types import Application, Page, PermissionedOrderedGroup, Table, TableField, File, User
 
 log = logging.getLogger(__name__)
 DEFAULT_CREDENTIALS_FILE = '.baserow-creds.json'
@@ -200,6 +201,17 @@ class BaserowClient(BaseClient):
   def get_database_table_row(self, table_id: int, row_id: int) -> t.Dict[str, t.Any]:
     return self._request('GET', f'/api/database/rows/table/{table_id}/{row_id}/').json()
 
+  def upload_file(self, file: BufferedReader) -> File:
+    """Uploads a file to Baserow by uploading the file contents directly."""
+    response = self._request('POST', '/api/user-files/upload-file/', files={'file': file}).json()
+    return databind.json.load(response, File)
+
+  def upload_via_url(self, url: str) -> File:
+    """Uploads a file to Baserow by downloading it from the provided URL."""
+    payload = {'url': url}
+    response = self._request('POST', '/api/user-files/upload-via-url/', json=payload).json()
+    return databind.json.load(response, File)
+
   # Extra
 
   def login(self, username: str, password: str, cache: t.Union[bool, str] = False) -> User:
@@ -296,3 +308,55 @@ class BaserowClient(BaseClient):
       if not page.next:
         break
       page_number = page.next
+
+  def update_file_field(
+      self,
+      table_id: int,
+      row_id: int,
+      field_id: int,
+      name: str,
+      visible_name: t.Optional[str] = None,
+  ) -> t.Dict[str, t.Any]:
+    """
+    Updates a file field with an already uploaded file, specified by it's internal name.
+    The name is contained within the upload file response.
+    """
+    record = {
+        f'field_{field_id}': [
+            {
+                'name': name,
+            }
+        ]
+    }
+    if visible_name is not None:
+      record[f'field_{field_id}'][0]['visible_name'] = visible_name
+    return self.update_database_table_row(table_id, row_id, record)
+
+  def upload_file_to_field(
+    self,
+    table_id: int,
+    row_id: int,
+    field_id: int,
+    file: BufferedReader,
+    visible_name: t.Optional[str] = None,
+  ) -> t.Dict[str, t.Any]:
+    """
+    Quality of life method. Uploads a specified file to Baserow and adds it to a specified file field.
+    """
+    response = self.upload_file(file)
+    return self.update_file_field(table_id, row_id, field_id, response.name, visible_name=visible_name)
+
+  def upload_via_url_to_field(
+    self,
+    table_id: int,
+    row_id: int,
+    field_id: int,
+    url: str,
+    visible_name: t.Optional[str] = None,
+  ) -> t.Dict[str, t.Any]:
+    """
+    Quality of life method. Uploads a specified file from a given URL to Baserow and adds it to a
+    specified file field.
+    """
+    response = self.upload_via_url(url)
+    return self.update_file_field(table_id, row_id, field_id, response.name, visible_name=visible_name)

@@ -1,5 +1,6 @@
 
 import dataclasses
+import datetime
 import enum
 import typing as t
 
@@ -78,6 +79,27 @@ class Page(t.Generic[T]):
   previous: t.Optional[int]
   next: t.Optional[int]
   results: t.List[T]
+
+
+@dataclasses.dataclass
+class Thumbnail:
+  url: str
+  width: t.Optional[int]
+  height: t.Optional[int]
+
+
+@dataclasses.dataclass
+class File:
+  size: int
+  mime_type: t.Optional[str]
+  is_image: t.Optional[bool]
+  image_width: t.Optional[int]
+  image_height: t.Optional[int]
+  uploaded_at: datetime.datetime
+  url: str
+  thumbnails: t.Dict[str, Thumbnail]
+  name: str
+  original_name: str
 
 
 from . import field_types
