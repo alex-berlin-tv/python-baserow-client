@@ -345,3 +345,18 @@ class BaserowClient(BaseClient):
     """
     response = self.upload_file(file)
     return self.update_file_field(table_id, row_id, field_id, response.name, visible_name=visible_name)
+
+  def upload_via_url_to_field(
+    self,
+    table_id: int,
+    row_id: int,
+    field_id: int,
+    url: str,
+    visible_name: t.Optional[str] = None,
+  ) -> t.Dict[str, t.Any]:
+    """
+    Quality of life method. Uploads a specified file from a given URL to Baserow and adds it to a
+    specified file field.
+    """
+    response = self.upload_via_url(url)
+    return self.update_file_field(table_id, row_id, field_id, response.name, visible_name=visible_name)
