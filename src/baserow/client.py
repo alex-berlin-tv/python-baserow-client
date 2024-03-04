@@ -298,6 +298,13 @@ class BaserowClient(BaseClient):
         break
       page_number = page.next
 
-  def upload_file(self, file: BufferedReader):
-    response = self._request("POST", "/api/user-files/upload-file/", files={"file": file}).json()
+  def upload_file(self, file: BufferedReader) -> UploadResponse:
+    """Uploads a file to Baserow by uploading the file contents directly."""
+    response = self._request('POST', '/api/user-files/upload-file/', files={'file': file}).json()
+    return databind.json.load(response, UploadResponse)
+
+  def upload_via_url(self, url: str) -> UploadResponse:
+    """Uploads a file to Baserow by downloading it from the provided URL."""
+    payload = {'url': url}
+    response = self._request('POST', '/api/user-files/upload-via-url/', json=payload).json()
     return databind.json.load(response, UploadResponse)
