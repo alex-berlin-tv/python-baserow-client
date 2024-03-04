@@ -1,7 +1,7 @@
 
 from databind.json import load, dump
 from baserow.types import TableField
-from baserow.field_types import TextTableField, NumberTableField, NumberType
+from baserow.field_types import TextTableField, NumberTableField
 
 
 def test__TableField__can_deserialize_into_union_subtypes() -> None:
