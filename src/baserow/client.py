@@ -1,5 +1,6 @@
 
 import dataclasses
+from io import BufferedReader
 import json
 import logging
 import typing as t
@@ -9,7 +10,7 @@ import databind.json
 import requests
 
 from .filter import Filter, FilterType
-from .types import Application, Page, PermissionedOrderedGroup, Table, TableField, User
+from .types import Application, Page, PermissionedOrderedGroup, Table, TableField, UploadResponse, User
 
 log = logging.getLogger(__name__)
 DEFAULT_CREDENTIALS_FILE = '.baserow-creds.json'
@@ -296,3 +297,7 @@ class BaserowClient(BaseClient):
       if not page.next:
         break
       page_number = page.next
+
+  def upload_file(self, file: BufferedReader):
+    response = self._request("POST", "/api/user-files/upload-file/", files={"file": file}).json()
+    return databind.json.load(response, UploadResponse)
