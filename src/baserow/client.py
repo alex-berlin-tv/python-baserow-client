@@ -192,8 +192,9 @@ class BaserowClient(BaseClient):
       page + 1 if response['next'] else None,
       response['results'])
 
-  def create_database_table_row(self, table_id: int, record: t.Dict[str, t.Any]) -> t.Dict[str, t.Any]:
-    return self._request('POST', f'/api/database/rows/table/{table_id}/', json=record).json()
+  def create_database_table_row(self, table_id: int, record: t.Dict[str, t.Any], user_field_names: bool = False) -> t.Dict[str, t.Any]:
+    params = {'user_field_names': user_field_names}
+    return self._request('POST', f'/api/database/rows/table/{table_id}/', json=record, params=params).json()
 
   def update_database_table_row(self, table_id: int, row_id: int, record: t.Dict[str, t.Any], user_field_names: bool = False) -> t.Dict[str, t.Any]: 
     params = {'user_field_names': user_field_names}
