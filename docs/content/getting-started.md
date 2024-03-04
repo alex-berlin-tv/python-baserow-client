@@ -47,6 +47,21 @@ client.create_database_table_row(45, {
   'field_281': 'Alice Doe',
   'field_293': 'alice@doe.org',
 })
+
+# It's also possible to create a row using the user field names.
+client.create_database_table_row(45, {
+  'Name': 'Alice Doe',
+  'E-Mail': 'alice@doe.org',
+}, user_field_names=True)
+
+client.update_database_table_row(TABLE_ID, ROW_ID, {
+  'field_281': 'Bob Doe',
+})
+
+# It's also possible to update a row using the user field names.
+client.update_database_table_row(TABLE_ID, ROW_ID, {
+  'Name': 'Bob Doe',
+}, user_field_names=True)
 ```
 
 > Try the the `paginate_database_table_rows()` method to conveniently iterate over all
