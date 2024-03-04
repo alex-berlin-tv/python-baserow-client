@@ -80,4 +80,25 @@ class Page(t.Generic[T]):
   results: t.List[T]
 
 
+@dataclasses.dataclass
+class Thumbnail:
+  url: str
+  width: t.Optional[int]
+  height: t.Optional[int]
+
+
+@dataclasses.dataclass
+class UploadResponse:
+  size: int
+  mime_type: t.Optional[str]
+  is_image: t.Optional[bool]
+  image_width: t.Optional[int]
+  image_height: t.Optional[int]
+  uploaded_at: str
+  url: str
+  thumbnails: t.Dict[str, Thumbnail]
+  name: str
+  original_name: str
+
+
 from . import field_types
