@@ -97,7 +97,7 @@ class File:
   image_height: t.Optional[int]
   uploaded_at: datetime.datetime
   url: str
-  thumbnails: t.Dict[str, Thumbnail]
+  thumbnails: t.Optional[t.Dict[str, Thumbnail]]
   name: str
   original_name: str
 
